@@ -28,7 +28,7 @@ public class SimpleEchoClient {
    public void sendAndReceive()
    {
       // Prepare a DatagramPacket and send it via sendReceiveSocket
-      // to port 5000 on the destination host.
+      // to port 5004 on the destination host.
  
       String s = "Anyone there?";
       System.out.println("Client: sending a packet containing:\n" + s);
@@ -52,10 +52,10 @@ public class SimpleEchoClient {
       //     the source (i.e., we want to run the client and server on the
       //     same computer). InetAddress.getLocalHost() returns the Internet
       //     address of the local host.
-      //  5000 - the destination port number on the destination host.
+      //  5004 - the destination port number on the destination host.
       try {
          sendPacket = new DatagramPacket(msg, msg.length,
-                                         InetAddress.getLocalHost(), 5000);
+                                         InetAddress.getLocalHost(), 5004);
       } catch (UnknownHostException e) {
          e.printStackTrace();
          System.exit(1);

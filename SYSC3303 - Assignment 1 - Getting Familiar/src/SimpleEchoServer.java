@@ -20,10 +20,10 @@ public class SimpleEchoServer {
          // send UDP Datagram packets.
          sendSocket = new DatagramSocket();
 
-         // Construct a datagram socket and bind it to port 5000 
+         // Construct a datagram socket and bind it to port 5004 
          // on the local host machine. This socket will be used to
          // receive UDP Datagram packets.
-         receiveSocket = new DatagramSocket(5000);
+         receiveSocket = new DatagramSocket(5004);
          
          // to test socket timeout (2 seconds)
          //receiveSocket.setSoTimeout(2000);
@@ -67,7 +67,7 @@ public class SimpleEchoServer {
       
       // Slow things down (wait 5 seconds)
       try {
-          Thread.sleep(5000);
+          Thread.sleep(5004);
       } catch (InterruptedException e ) {
           e.printStackTrace();
           System.exit(1);
