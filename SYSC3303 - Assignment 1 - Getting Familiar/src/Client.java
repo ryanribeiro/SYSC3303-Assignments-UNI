@@ -3,7 +3,7 @@ import java.net.*;
 
 public class Client {
 
-	int socketNumberSend = 23, socketNumberReceive = 5000;
+	int socketSendNumber = 23;
 	DatagramPacket sendPacket, receivePacket;
 	DatagramSocket sendReceiveSocket;
 	
@@ -103,10 +103,10 @@ public class Client {
 		return messageWrite;
 	}
 
-	public void printSentPacketInfo(DatagramPacket packet) {
-		System.out.print("SentPacket contents as Bytes: ");
+	public void printsendPacketInfo(DatagramPacket packet) {
+		System.out.print("sendPacket contents as Bytes: ");
 		System.out.println(packet.getData());
-		System.out.print("SentPacket contents as a String: ");
+		System.out.print("sendPacket contents as a String: ");
 		System.out.println(new String(packet.getData(),0,packet.getLength()));
 	}
 	
@@ -119,8 +119,8 @@ public class Client {
 
 	public void sendReceiveRequest(byte message[]) {
 		try {
-			sendPacket = new DatagramPacket(message, message.length, InetAddress.getLocalHost(), socketNumberSend);
-			printSentPacketInfo(sendPacket);
+			sendPacket = new DatagramPacket(message, message.length, InetAddress.getLocalHost(), socketSendNumber);
+			printsendPacketInfo(sendPacket);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			System.exit(1);
