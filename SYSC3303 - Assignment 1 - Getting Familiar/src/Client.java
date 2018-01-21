@@ -3,9 +3,9 @@ import java.net.*;
 
 public class Client {
 
-	int socketSendNumber = 23;
-	DatagramPacket sendPacket, receivePacket;
-	DatagramSocket sendReceiveSocket;
+	private int socketSendNumber = 23;
+	private DatagramPacket sendPacket, receivePacket;
+	private DatagramSocket sendReceiveSocket;
 	
 	public Client() {
 		try {
@@ -16,7 +16,10 @@ public class Client {
 		}
 	}
 	
-
+	/**
+	 * Takes a message (read, write, or invalid) and calls sendReceiveRequest however many times
+	 * to test if sending and receiving work correctly.
+	 */
 	public void sendAndReceive() {
 		byte messageRead[] = createReadBytes();
 		byte messageWrite[] = createWriteBytes();
@@ -27,6 +30,8 @@ public class Client {
 		for (i = 0; i < numberOfRequests; i++) {
 			if (i == numberOfRequests - 1) {
 				//do something wrong
+				byte invalidMessage[] = {0,3};
+				sendReceiveRequest(invalidMessage);
 			} else if (i % 2 == 0) {
 				//Will do five 'read requests' total
 				sendReceiveRequest(messageRead);
@@ -41,10 +46,13 @@ public class Client {
 		// TODO Auto-generated method stub
 		Client c = new Client();
 		c.sendAndReceive();
-
-
 	}
 	
+	/**
+	 * Creates a message to be used in a read packet by combining the different pieces that make up the single stream of bytes 
+	 * arraycopy is used so that we don't have to worry about the specific length of the file name or the mode
+	 * @return the message that will be used for the read packet
+	 */
 	public byte[] createReadBytes () {
 		String filename = "filename.txt";
 		byte file[] = filename.getBytes();
@@ -54,7 +62,8 @@ public class Client {
 		byte readFirstTwoBit[] = {0, 1};
 		byte zeroBit[] = {0};
 		
-		//Creating a 'read' packet		
+		//Creating a 'read' packet message by combining the different pieces that make up the single stream of bytes
+		//arraycopy is used so that we don't have to worry about the specific length of the file name or the mode		
 		byte readPart1[] = new byte[readFirstTwoBit.length + file.length];
 		System.arraycopy(readFirstTwoBit, 0, readPart1, 0, readFirstTwoBit.length);
 		System.arraycopy(file, 0, readPart1, readFirstTwoBit.length, file.length);
@@ -74,6 +83,11 @@ public class Client {
 		return messageRead;
 	}
 	
+	/**
+	 * Creates a message to be used in a write packet by combining the different pieces that make up the single stream of bytes 
+	 * arraycopy is used so that we don't have to worry about the specific length of the file name or the mode
+	 * @return the message that will be used for the write packet
+	 */
 	public byte[] createWriteBytes() {
 		String filename = "filename.txt";
 		byte file[] = filename.getBytes();
@@ -83,7 +97,8 @@ public class Client {
 		byte writeFirstTwoBit[] = {0, 2};
 		byte zeroBit[] = {0};
 		
-		//Creating a 'write' packet		
+		//Creating a 'write' packet	by combining the different pieces that make up the single stream of bytes
+		//arraycopy is used so that we don't have to worry about the specific length of the file name or the mode
 		byte writePart1[] = new byte[writeFirstTwoBit.length + file.length];
 		System.arraycopy(writeFirstTwoBit, 0, writePart1, 0, writeFirstTwoBit.length);
 		System.arraycopy(file, 0, writePart1, writeFirstTwoBit.length, file.length);
@@ -103,13 +118,21 @@ public class Client {
 		return messageWrite;
 	}
 
-	public void printsendPacketInfo(DatagramPacket packet) {
-		System.out.print("sendPacket contents as Bytes: ");
+	/**
+	 * Prints out information about the sendPacket
+	 * @param packet
+	 */
+	public void printSendPacketInfo(DatagramPacket packet) {
+		System.out.print("SendPacket contents as Bytes: ");
 		System.out.println(packet.getData());
-		System.out.print("sendPacket contents as a String: ");
+		System.out.print("SendPacket contents as a String: ");
 		System.out.println(new String(packet.getData(),0,packet.getLength()));
 	}
 	
+	/**
+	 * Prints out information about the receivePacket
+	 * @param packet
+	 */
 	public void printReceivePacketInfo(DatagramPacket packet) {
 		System.out.print("RecievePacket contents as Bytes: ");
 		System.out.println(packet.getData());
@@ -117,10 +140,14 @@ public class Client {
 		System.out.println(new String(packet.getData(),0,packet.getLength()));
 	}
 
+	/**
+	 * Creates send packet containing message, tries to send it, and then tries to receive the returned package.
+	 * @param message
+	 */
 	public void sendReceiveRequest(byte message[]) {
 		try {
 			sendPacket = new DatagramPacket(message, message.length, InetAddress.getLocalHost(), socketSendNumber);
-			printsendPacketInfo(sendPacket);
+			printSendPacketInfo(sendPacket);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			System.exit(1);

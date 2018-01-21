@@ -3,9 +3,9 @@ import java.net.*;
 
 public class IntermediateHost {
 
-	int socketSendNumber = 69, socketReceiveNumber = 23;
-	DatagramPacket sendPacket, receivePacket;
-	DatagramSocket sendReceiveSocket, receiveSocket;
+	private int socketSendNumber = 69, socketReceiveNumber = 23;
+	private DatagramPacket sendPacket, receivePacket;
+	private DatagramSocket sendReceiveSocket, receiveSocket;
 		
 	public IntermediateHost() {
 		try {
@@ -17,6 +17,11 @@ public class IntermediateHost {
 		}
 	}
 	
+	/**
+	 * Receives a packet from a client and passes the packet along to the server. The server
+	 * then sends back a packet, and the local host sends it back to the client who then
+	 * deals with it on it's own.
+	 */
 	public void sendAndReceive() {
 		byte data[] = new byte[1000];
 		receivePacket = new DatagramPacket(data, data.length);
@@ -32,6 +37,7 @@ public class IntermediateHost {
 				e.printStackTrace();
 				System.exit(1);
 			}
+			
 			//sending to server
 			try {
 				sendPacket = new DatagramPacket(receivePacket.getData(), receivePacket.getData().length, InetAddress.getLocalHost(), socketSendNumber);
@@ -46,6 +52,7 @@ public class IntermediateHost {
 				e.printStackTrace();
 				System.exit(1);
 			}
+			//receive from server
 			try {
 				sendReceiveSocket.receive(receivePacket);
 				System.out.println("Intermediate host received packet from Server.");
@@ -55,6 +62,7 @@ public class IntermediateHost {
 				System.exit(1);
 			}
 			sendReceiveSocket.close();
+			
 			//return to client
 			try {
 				sendPacket = new DatagramPacket(receivePacket.getData(), receivePacket.getData().length, InetAddress.getLocalHost(), socketReceiveNumber);
@@ -78,13 +86,21 @@ public class IntermediateHost {
 		intHost.sendAndReceive();
 	}
 
-	public void printsendPacketInfo(DatagramPacket packet) {
-		System.out.print("sendPacket contents as Bytes: ");
+	/**
+	 * Prints out information about the sendPacket
+	 * @param packet
+	 */
+	public void printSendPacketInfo(DatagramPacket packet) {
+		System.out.print("SendPacket contents as Bytes: ");
 		System.out.println(packet.getData());
-		System.out.print("sendPacket contents as a String: ");
+		System.out.print("SendPacket contents as a String: ");
 		System.out.println(new String(packet.getData(),0,packet.getLength()));
 	}
 	
+	/**
+	 * Prints out information about the receivePacket
+	 * @param packet
+	 */
 	public void printReceivePacketInfo(DatagramPacket packet) {
 		System.out.print("RecievePacket contents as Bytes: ");
 		System.out.println(packet.getData());
