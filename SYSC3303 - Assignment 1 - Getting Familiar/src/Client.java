@@ -21,34 +21,26 @@ public class Client {
 		byte messageRead[] = createReadBytes();
 		byte messageWrite[] = createWriteBytes();
 		int i, numberOfRequests = 11;
+		byte receivedData[] = new byte[1000];
+		receivePacket = new DatagramPacket(receivedData, receivedData.length);
 		
 		for (i = 0; i < numberOfRequests; i++) {
 			if (i == numberOfRequests - 1) {
-				//do something
+				//do something wrong
 			} else if (i % 2 == 0) {
 				//Will do five 'read requests' total
-				try {
-					sendPacket = new DatagramPacket(messageRead, messageRead.length, InetAddress.getLocalHost(), socketNumberSend);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-					System.exit(1);
-				}
+				sendReceiveRequest(messageRead);
 			} else  {
 				//Will do write 'read requests' total
-				try {
-					sendPacket = new DatagramPacket(messageWrite, messageWrite.length, InetAddress.getLocalHost(), socketNumberSend);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-					System.exit(1);
-				}
-			}	
-		}
-		
-	}
-	
+				sendReceiveRequest(messageWrite);
+			}			
+		}		
+	}	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		Client c = new Client();
+		c.sendAndReceive();
 
 
 	}
@@ -111,4 +103,41 @@ public class Client {
 		return messageWrite;
 	}
 
+	public void printSentPacketInfo(DatagramPacket packet) {
+		System.out.print("SentPacket contents as Bytes: ");
+		System.out.println(packet.getData());
+		System.out.print("SentPacket contents as a String: ");
+		System.out.println(new String(packet.getData(),0,packet.getLength()));
+	}
+	
+	public void printReceivePacketInfo(DatagramPacket packet) {
+		System.out.print("RecievePacket contents as Bytes: ");
+		System.out.println(packet.getData());
+		System.out.print("RecievePacket contents as a String: ");
+		System.out.println(new String(packet.getData(),0,packet.getLength()));
+	}
+
+	public void sendReceiveRequest(byte message[]) {
+		try {
+			sendPacket = new DatagramPacket(message, message.length, InetAddress.getLocalHost(), socketNumberSend);
+			printSentPacketInfo(sendPacket);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		try {
+			sendReceiveSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		try {
+			sendReceiveSocket.receive(receivePacket);
+			printReceivePacketInfo(receivePacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		sendReceiveSocket.close();
+	}
 }
