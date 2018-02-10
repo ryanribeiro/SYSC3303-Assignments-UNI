@@ -1,15 +1,15 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Agent implements Runnable {
 
 	private static final int NUMBER_OF_SANDWICHES = 20;
-	private Ingredient ingredientOne, ingredientTwo, ingredientThree;
+	private ArrayList<Ingredient> ingredients;
 	private Table table;
 	
 	public Agent (Ingredient one, Ingredient two, Ingredient three, Table table) {
-		this.setIngredientOne(one);
-		this.setIngredientTwo(two);
-		this.setIngredientThree(three);
+		this.ingredients = new ArrayList<>();
+		this.setupIngredients(one, two, three);
 		this.setTable(table);
 	}
 	
@@ -20,39 +20,33 @@ public class Agent implements Runnable {
 		}
 	}
 
-	public ArrayList<Ingredient> getTwoIngredients() {
-		return null;
+	public synchronized void setupIngredients(Ingredient one, Ingredient two, Ingredient three) {
+		this.ingredients.add(one);
+		this.ingredients.add(two);
+		this.ingredients.add(three);
 	}
 	
-	public Ingredient getIngredientOne() {
-		return ingredientOne;
+	public synchronized ArrayList<Ingredient> getTwoIngredients() {
+		//Generates an array of two distinct integers between 0 and 2 (e.g. 0,1 or 0,2 or 1,0 etc.)
+		int[] randomInts = new Random().ints(0,2).distinct().limit(2).toArray();
+		ArrayList<Ingredient> twoIngredients = new ArrayList<>();
+		
+		//Creates and array with two distinct ingredients based on the previously generated distinct random integers
+		twoIngredients.add(this.getIngredient(randomInts[0]));
+		twoIngredients.add(this.getIngredient(randomInts[1]));
+		
+		return twoIngredients;
+	}
+	
+	public synchronized Ingredient getIngredient(int index) {
+		return this.ingredients.get(index);
 	}
 
-	public void setIngredientOne(Ingredient ingredientOne) {
-		this.ingredientOne = ingredientOne;
-	}
-
-	public Ingredient getIngredientTwo() {
-		return ingredientTwo;
-	}
-
-	public void setIngredientTwo(Ingredient ingredientTwo) {
-		this.ingredientTwo = ingredientTwo;
-	}
-
-	public Ingredient getIngredientThree() {
-		return ingredientThree;
-	}
-
-	public void setIngredientThree(Ingredient ingredientThree) {
-		this.ingredientThree = ingredientThree;
-	}
-
-	public Table getTable() {
+	public synchronized Table getTable() {
 		return table;
 	}
 
-	public void setTable(Table table) {
+	public synchronized void setTable(Table table) {
 		this.table = table;
 	}
 }
