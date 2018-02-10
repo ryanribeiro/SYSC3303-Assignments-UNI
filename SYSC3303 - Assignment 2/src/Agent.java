@@ -1,4 +1,4 @@
 
-public class Agent {
+public class Agent extends Thread{
 
 }
