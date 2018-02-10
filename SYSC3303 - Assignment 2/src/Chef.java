@@ -10,22 +10,28 @@ public class Chef implements Runnable {
 	}
 	
 	public void run() {
-		
+		while(table.isTableOpen()) {
+			
+		}
 	}
 
-	public Ingredient getIngredient() {
+	public synchronized void consume() {
+		
+	}
+	
+	public synchronized Ingredient getIngredient() {
 		return ingredient;
 	}
 
-	public void setIngredient(Ingredient ingredient) {
+	public synchronized void setIngredient(Ingredient ingredient) {
 		this.ingredient = ingredient;
 	}
 
-	public Table getTable() {
+	public synchronized Table getTable() {
 		return table;
 	}
 
-	public void setTable(Table table) {
+	public synchronized void setTable(Table table) {
 		this.table = table;
 	}
 }

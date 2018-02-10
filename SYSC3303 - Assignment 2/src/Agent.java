@@ -17,6 +17,34 @@ public class Agent implements Runnable {
 		int i = 0;
 		for (; i < NUMBER_OF_SANDWICHES; i++) {
 			ArrayList<Ingredient> twoIngredients = this.getTwoIngredients();
+			
+			System.out.println(Thread.currentThread().getName() + "put " + this.getIngredientName(twoIngredients.get(0)));
+			table.put(twoIngredients.get(0));
+			System.out.println(Thread.currentThread().getName() + "put " + this.getIngredientName(twoIngredients.get(1)));
+			table.put(twoIngredients.get(1));
+			
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				System.err.println("Agent thread had an error when trying to sleep.");
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
+		//NUMBER_OF_SANDWICHES have been made, so the table is now closed.
+		table.setTableOpen(false);
+	}
+
+	private synchronized String getIngredientName(Ingredient ingredient) {
+		switch (ingredient) {
+			case BREAD:
+				return "bread";
+			case JAM:
+				return "jam";
+			case BUTTER:
+				return "butter";
+			default:
+				return "ERROR in obtaining ingredient name";
 		}
 	}
 

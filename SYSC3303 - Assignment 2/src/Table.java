@@ -5,6 +5,7 @@ public class Table {
 	private ArrayList<Ingredient> tableContents;
 	private boolean clear = true;
 	private boolean full = false;
+	private boolean tableOpen = true;
 	
 	public Table () {
 		this.tableContents = new ArrayList<>();
@@ -56,5 +57,13 @@ public class Table {
 
 	public synchronized void setFull(boolean full) {
 		this.full = full;
+	}
+
+	public synchronized boolean isTableOpen() {
+		return tableOpen;
+	}
+
+	public synchronized void setTableOpen(boolean tableOpen) {
+		this.tableOpen = tableOpen;
 	}
 }
