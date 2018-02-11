@@ -18,13 +18,14 @@ public class Agent implements Runnable {
 		for (; i < NUMBER_OF_SANDWICHES; i++) {
 			ArrayList<Ingredient> twoIngredients = this.getTwoIngredients();
 			
-			System.out.println(Thread.currentThread().getName() + "put " + this.getIngredientName(twoIngredients.get(0)));
+			System.out.println("\nSandwich number " + (i+1) + " has been started.");
+			System.out.println(Thread.currentThread().getName() + " put " + this.getIngredientName(twoIngredients.get(0)) + " on the table.");
 			table.put(twoIngredients.get(0));
-			System.out.println(Thread.currentThread().getName() + "put " + this.getIngredientName(twoIngredients.get(1)));
+			System.out.println(Thread.currentThread().getName() + " put " + this.getIngredientName(twoIngredients.get(1)) + " on the table.");
 			table.put(twoIngredients.get(1));
 			
 			try {
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				System.err.println("Agent thread had an error when trying to sleep.");
 				e.printStackTrace();
@@ -33,6 +34,7 @@ public class Agent implements Runnable {
 		}
 		//NUMBER_OF_SANDWICHES have been made, so the table is now closed.
 		table.setTableOpen(false);
+		System.out.println("\n All sandwiches have been made and consumed. Exiting now.");
 	}
 
 	private synchronized String getIngredientName(Ingredient ingredient) {
@@ -56,7 +58,10 @@ public class Agent implements Runnable {
 	
 	public synchronized ArrayList<Ingredient> getTwoIngredients() {
 		//Generates an array of two distinct integers between 0 and 2 (e.g. 0,1 or 0,2 or 1,0 etc.)
-		int[] randomInts = new Random().ints(0,2).distinct().limit(2).toArray();
+		int[] randomInts;
+		synchronized(this) {
+			randomInts = new Random().ints(0,3).distinct().limit(2).toArray();
+		}		
 		ArrayList<Ingredient> twoIngredients = new ArrayList<>();
 		
 		//Creates and array with two distinct ingredients based on the previously generated distinct random integers

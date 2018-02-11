@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Table {
 
 	private ArrayList<Ingredient> tableContents;
-	private boolean clear = true;
 	private boolean full = false;
 	private boolean tableOpen = true;
 	
@@ -21,36 +20,38 @@ public class Table {
 				System.exit(1);
 			}
 		}
-		tableContents.add(ingredient);
-		if (tableContents.size() == 2)
+		synchronized(this) {
+			tableContents.add(ingredient);
+		}
+		if (tableContents.size() == 2) {
 			this.setFull(true);
-		this.setClear(false);
+		} else {
+			this.setFull(false);
+		}
+		notifyAll();
+		
 	}
 	
-	public synchronized void clearTable() {
-		tableContents.clear();
-		this.setClear(true);
-		this.setFull(false);
-	}
-	
-	public synchronized ArrayList<Ingredient> getTableContents() {
+	public synchronized ArrayList<Ingredient> checkTableContents() {
+		while (!(this.isFull())) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println("Error occurred when trying to wait() after checking an empty table.");
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
 		return tableContents;
 	}
 	
-	public synchronized ArrayList<Ingredient> takeTableContents() {
-		ArrayList<Ingredient> ingredients = this.getTableContents();
-		this.clearTable();
-		return ingredients;
+	public synchronized void takeTableContents() {
+		this.tableContents.clear();
+		System.out.println("Table has been cleared!");
+		this.setFull(false);
+		notifyAll();
 	}
 
-	public synchronized boolean isClear() {
-		return clear;
-	}
-
-	public synchronized void setClear(boolean clear) {
-		this.clear = clear;
-	}
-	
 	public synchronized boolean isFull() {
 		return full;
 	}

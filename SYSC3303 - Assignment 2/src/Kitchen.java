@@ -18,7 +18,6 @@ public class Kitchen {
 		agent.start();
 		chefOne.start();
 		chefTwo.start();
-		chefThree.start();
-		
+		chefThree.start();		
 	}
 }
