@@ -66,7 +66,7 @@ public class Agent implements Runnable {
 		}
 		//NUMBER_OF_SANDWICHES have been made, so the table is now closed.
 		table.setTableOpen(false);
-		System.out.println("\n All sandwiches have been made and consumed. Exiting now.");
+		System.out.println("\nAll sandwiches have been made and consumed. Exiting now.");
 	}
 
 	/**
